@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 5: Arrays</title>
+</head>
+
+<body>
+    <h1>JavaScript Arrays</h1>
+
+    <div>
+        <input type="text" id="newStudent" placeholder="ชื่อนักศึกษาใหม่">
+        <button onclick="addStudent()">เพิ่มนักศึกษา</button>
+        <button onclick="removeLastStudent()">ลบคนสุดท้าย</button>
+        <button onclick="searchStudent()">ค้นหา "สม"</button>
+        <button onclick="showStatistics()">แสดงสถิติ</button>
+    </div>
+
+    <div id="arrayResult"></div> <br>
+
+    <h2>ห้องสมุด</h2>
+
+    <div>
+        <input type="text" id="newBooks" placeholder="ชื่อหนังสือใหม่">
+        <button onclick="addBooks()">เพิ่มหนังสือ</button>
+        <button onclick="removeLastBooks()">ลบหนังสือเล่มสุดท้าย</button>
+        <button onclick="searchBooks()">ค้นหา "โปรแกรม"</button>
+    </div>
+
+    <div id="booksResult"></div> <!-- เปลี่ยนชื่อ ID ให้ถูกต้อง -->
+
+    <script>
+        // สร้าง Array นักศึกษา
+        let students = ["สมชาย", "สมหญิง", "สมศักดิ์", "สมใจ", "วิภา", "นิพนธ์"];
+
+        // คะแนนสอบ
+        let scores = [85, 92, 78, 88, 96, 82];
+
+        // รายการหนังสือ
+        let books = [];
+
+        function displayStudents() {
+            let result = `<h3>รายชื่อนักศึกษา (${students.length} คน):</h3><ol>`;
+            for (let i = 0; i < students.length; i++) {
+                result += `<li>${students[i]} - คะแนน: ${scores[i] || 'ไม่มีข้อมูล'}</li>`;
+            }
+            result += "</ol>";
+            return result;
+        }
+
+        function addStudent() {
+            const newName = document.getElementById('newStudent').value.trim();
+            if (newName === "") {
+                alert("กรุณาใส่ชื่อนักศึกษา");
+                return;
+            }
+
+            students.push(newName);
+            const randomScore = Math.floor(Math.random() * 40) + 60;
+            scores.push(randomScore);
+            document.getElementById('newStudent').value = "";
+            updateDisplay();
+        }
+
+        function removeLastStudent() {
+            if (students.length === 0) {
+                alert("ไม่มีนักศึกษาในรายชื่อ");
+                return;
+            }
+
+            students.pop();
+            scores.pop();
+            updateDisplay();
+        }
+
+        function searchStudent() {
+            const foundStudents = students.filter(name => name.includes("สม"));
+            let result = displayStudents();
+            result += `<h4>นักศึกษาที่มี "สม" ในชื่อ (${foundStudents.length} คน):</h4>`;
+            result += `<p style="color: blue;">${foundStudents.join(", ")}</p>`;
+            document.getElementById('arrayResult').innerHTML = result;
+        }
+
+        function showStatistics() {
+            const totalStudents = students.length;
+            const totalScore = scores.reduce((sum, score) => sum + score, 0);
+            const averageScore = totalScore / totalStudents;
+            const maxScore = Math.max(...scores);
+            const minScore = Math.min(...scores);
+            const topStudentIndex = scores.indexOf(maxScore);
+            const topStudent = students[topStudentIndex];
+
+            let result = displayStudents();
+            result += `
+                <h4>สถิติคะแนน:</h4>
+                <ul>
+                    <li>จำนวนนักศึกษา: ${totalStudents} คน</li>
+                    <li>คะแนนเฉลี่ย: ${averageScore.toFixed(2)} คะแนน</li>
+                    <li>คะแนนสูงสุด: ${maxScore} คะแนน (${topStudent})</li>
+                    <li>คะแนนต่ำสุด: ${minScore} คะแนน</li>
+                </ul>
+            `;
+            document.getElementById('arrayResult').innerHTML = result;
+        }
+
+        function updateDisplay() {
+            document.getElementById('arrayResult').innerHTML = displayStudents();
+        }
+
+        function addBooks() {
+            const newBook = document.getElementById('newBooks').value.trim();
+            if (newBook === "") {
+                alert("กรุณาใส่ชื่อหนังสือ");
+                return;
+            }
+
+            books.push(newBook);
+            document.getElementById('newBooks').value = "";
+            updateBooksDisplay();
+        }
+
+        function removeLastBooks() {
+            if (books.length === 0) {
+                alert("ไม่มีหนังสือในรายการ");
+                return;
+            }
+
+            books.pop();
+            updateBooksDisplay();
+        }
+
+        function searchBooks() {
+            const foundBooks = books.filter(title => title.includes("โปรแกรม"));
+
+            let result = `<h4>หนังสือที่มีคำว่า "โปรแกรม" (${foundBooks.length} เล่ม):</h4><ul>`;
+            foundBooks.forEach(book => {
+                result += `<li style="color: green;">${book}</li>`;
+            });
+            result += `</ul>`;
+
+            document.getElementById('booksResult').innerHTML = result;
+        }
+
+        function updateBooksDisplay() {
+            let result = `<h4>รายการหนังสือ (${books.length} เล่ม):</h4><ul>`;
+            books.forEach(book => {
+                result += `<li>${book}</li>`;
+            });
+            result += "</ul>";
+            document.getElementById('booksResult').innerHTML = result;
+        }
+
+        // แสดงผลเริ่มต้น
+        updateDisplay();
+
+    </script>
+</body>
+</html>
